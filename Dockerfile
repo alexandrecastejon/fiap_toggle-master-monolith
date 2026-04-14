@@ -6,18 +6,12 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 COPY requirements.txt .
-
 RUN pip install --no-cache-dir -r requirements.txt
-
-COPY entrypoint.sh .
-
-RUN chmod +x entrypoint.sh
 
 COPY app.py .
 
-RUN apt-get update && apt-get install -y postgresql-client
+RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 5000
 
-ENTRYPOINT ["sh", "./entrypoint.sh"]
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+CMD sh -c 'while ! pg_isready -h "$DB_HOST" -p "$DB_PORT" -q -U "$DB_USER"; do sleep 1; done && python3 -c "from app import init_db; init_db()" && gunicorn --bind 0.0.0.0:5000 app:app'

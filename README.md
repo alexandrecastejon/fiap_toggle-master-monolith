@@ -107,6 +107,7 @@ Você pode usar o Postman ou `curl` para interagir com a API rodando localmente 
 | `GET`  | `/flags`                    | N/A                                      | Lista todas as flags existentes. |
 | `GET`  | `/flags/<nome-da-flag>`     | N/A                                      | Retorna o status de uma flag.    |
 | `PUT`  | `/flags/<nome-da-flag>`     | `{"is_enabled": false}`                  | Atualiza o status de uma flag.   |
+| `DELETE` | `/flags/<nome-da-flag>`   | N/A                                      | Remove uma feature flag.         |
 
 #### Exemplos com `curl`
 
@@ -167,6 +168,18 @@ curl -X PUT \
 ```bash
 {
   "message": "Flag 'new-feature' updated"
+}
+```
+
+**5. Remover uma flag (`new-feature`):**
+```bash
+curl -X DELETE http://localhost:5000/flags/new-feature
+```
+
+**Saída esperada:**
+```bash
+{
+    "message": "Flag 'new-feature' removed"
 }
 ```
 
